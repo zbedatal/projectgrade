@@ -1,4 +1,4 @@
-package com.github.rotolonico.firebasesmartreply
+package apply plugin: 'com.android.application'
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,7 +10,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var conversation = ArrayList<FirebaseTextMessage>()
+  private  var conversation = ArrayList<FirebaseTextMessage>{}
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,17 +21,18 @@ class MainActivity : AppCompatActivity() {
             addMessage(messageText.text.toString())
         }
 
-        hintsButton.setOnClickListener {
-            getHints()
+        hint0Button.setOnClickListener {
+                getHints()
         }
 
+        val clearButton
         clearButton.setOnClickListener {
             conversation = ArrayList()
 
             hint0Button.visibility = View.GONE
-            hint1Button.visibility = View.GONE
-            hint2Button.visibility = View.GONE
-            errorText.text = ""
+            hint0Button.visibility = View.GONE
+            hint0Button.visibility = View.GONE
+            hint0Button.text = ""
         }
 
         hint0Button.setOnClickListener {
@@ -48,29 +50,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun addMessage(text : String){
         conversation.add(
-            FirebaseTextMessage.createForRemoteUser(
-                text, System.currentTimeMillis(), nameText.text.toString()))
+                FirebaseTextMessage.createForRemoteUser(
+                        text, System.currentTimeMillis(), nameText.text.toString()))
     }
 
     private fun getHints(){
         val smartReply = FirebaseNaturalLanguage.getInstance().smartReply
         smartReply.suggestReplies(conversation)
-            .addOnSuccessListener { result ->
-                if (result.getStatus() == SmartReplySuggestionResult.STATUS_NOT_SUPPORTED_LANGUAGE) {
-                    errorText.text = "Language not supported"
-                } else if (result.getStatus() == SmartReplySuggestionResult.STATUS_SUCCESS) {
-                    hint0Button.text = result.suggestions[0].text
-                    hint1Button.text = result.suggestions[1].text
-                    hint2Button.text = result.suggestions[2].text
+                .addOnSuccessListener { result ->
+                    if (result.getStatus() == SmartReplySuggestionResult.STATUS_NOT_SUPPORTED_LANGUAGE) {
+                        errorText.text = "Language not supported"
+                    } else if (result.getStatus() == SmartReplySuggestionResult.STATUS_SUCCESS) {
+                        hint0Button.text = result.suggestions[0].text
+                        hint1Button.text = result.suggestions[1].text
+                        hint2Button.text = result.suggestions[2].text
 
-                    hint0Button.visibility = View.VISIBLE
-                    hint1Button.visibility = View.VISIBLE
-                    hint2Button.visibility = View.VISIBLE
-                    errorText.text = ""
+                        hint0Button.visibility = View.VISIBLE
+                        hint1Button.visibility = View.VISIBLE
+                        hint2Button.visibility = View.VISIBLE
+                        errorText.text = ""
+                    }
                 }
-            }
-            .addOnFailureListener {
-                errorText.text = it.toString()
-            }
+                .addOnFailureListener {
+                    errorText.text = it.toString()
+                }
     }
-}
+
+    enum class FirebaseTextMessage {
+
+    }
+    };
+
